@@ -1,28 +1,22 @@
 
 <p style="text-align: center;"><img src="public/assets/images/core/logo.svg"  width="300"></p>
 
-# Lumo
+# ONSDave25
 
-Lumo is a simple boilerplate for building Laravel applications. It comes with...
-
-- Laravel 11
-- TailwindCSS
-- Livewire
-- Breeze authentication
-- FlyonUI components
+A time recording application.
 
 ## Installation
 
 Clone the project
 
 ```bash
-git clone git@github.com:angus-boilerplates/Lumo.git
+git clone git@github.com:angus-websites/ONSDave25.git
 ```
 
 Go to the project directory
 
 ```bash
-cd Lumo
+cd ONSDave25
 ```
 
 ## Laravel sail
