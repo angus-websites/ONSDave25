@@ -24,7 +24,8 @@
                                 href="{{ route('register') }}"
                                 class="btn btn-primary btn-lg"
                                 >
-                             Get Started
+                                 <span class="">Get started</span>
+                                <span class="icon-[tabler--arrow-right]"></span>
                              </a>
                           </li>
 
