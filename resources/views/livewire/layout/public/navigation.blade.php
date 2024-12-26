@@ -23,9 +23,11 @@
         <li><a class="dropdown-item" href="#">Link 3</a></li>
       </ul>
     </div>
-    <a class="btn max-md:btn-square btn-primary" href="#">
-      <span class="max-md:hidden">Get started</span>
-      <span class="icon-[tabler--arrow-right]"></span>
+      <a class="btn btn-secondary" href="{{ route('login') }}">
+        <span class="n">Login</span>
+      </a>
+    <a class="btn btn-primary" href="{{ route('register') }}">
+      <span class="">Register</span>
     </a>
   </div>
 </nav>

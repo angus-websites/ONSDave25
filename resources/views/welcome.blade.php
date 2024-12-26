@@ -10,13 +10,13 @@
                        <h1
                           class="mb-5 text-4xl font-bold !leading-[1.208] text-dark dark:text-white sm:text-[42px] lg:text-[40px] xl:text-5xl"
                           >
-                          A Laravel <br />
-                          Boilerplate.
+                          Time recording <br />
+                          Tool.
                        </h1>
                        <p
                           class="mb-8 max-w-[480px] text-base text-body-color dark:text-dark-6"
                           >
-                          Lumo is a Laravel 11 boilerplate that comes with Breeze, Livewire and FlyonUI. It is a perfect starting point for your next big project.
+                          A simple time recording tool that helps you keep track how many hours you have worked
                        </p>
                        <ul class="flex flex-wrap items-center">
                           <li>
@@ -24,7 +24,8 @@
                                 href="{{ route('register') }}"
                                 class="btn btn-primary btn-lg"
                                 >
-                             Get Started
+                                 <span class="">Get started</span>
+                                <span class="icon-[tabler--arrow-right]"></span>
                              </a>
                           </li>
 
