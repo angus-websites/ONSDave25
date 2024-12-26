@@ -4,9 +4,10 @@ namespace Database\Seeders;
 
 use App\Exceptions\MissingAdminCredentialsException;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Exceptions\RoleDoesNotExist;
 
 class AdminSeeder extends Seeder
 {

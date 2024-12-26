@@ -13,7 +13,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Seed roles
+        $this->call(RoleSeeder::class);
+
         // Seed Leave types
         $this->call(LeaveTypeSeeder::class);
+
+        // Seed admin user
+        $this->call(AdminSeeder::class);
     }
 }
