@@ -7,10 +7,21 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-base-300 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("You're logged in!") }}
-                </div>
+            <div class="text-center">
+                <h1
+                    class="text-4xl font-bold tracking-tight text-base-content sm:text-4xl"
+                >
+                    Good morning User
+                </h1>
+                <p class="mb-6 mt-2 text-lg leading-8 text-base-content/70">
+                    Today you have worked...
+                </p>
+                <p
+                    class="text-5xl font-bold tracking-tight text-accent sm:text-8xl"
+                >
+                    00:00:00
+                </p>
+                <div class="divider"></div>
             </div>
         </div>
     </div>

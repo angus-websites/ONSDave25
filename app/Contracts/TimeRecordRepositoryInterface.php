@@ -2,7 +2,9 @@
 
 namespace App\Contracts;
 
+use App\Collections\TimeRecordCollection;
 use App\Models\TimeRecord;
+use Carbon\Carbon;
 
 /**
  * The TimeRecordRepositoryInterface is a contract that defines the methods that should be implemented
@@ -18,4 +20,6 @@ interface TimeRecordRepositoryInterface
     public function removeLastRecordForUser(int $userId): void;
 
     public function getAllRecordsForUser(int $userId): iterable;
+
+    public function getTimeRecordsForDay(int $userId, Carbon $day): TimeRecordCollection;
 }
