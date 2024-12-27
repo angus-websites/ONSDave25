@@ -3,6 +3,7 @@
 namespace App\Livewire\Pages\Dashboard;
 
 use App\Enums\TimeRecordType;
+use App\Exceptions\ShortSessionDurationException;
 use App\Services\TimeRecordService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -29,7 +30,11 @@ class Clock extends Component
     public function clock(): void
     {
         $userID = Auth::id();
-        $this->timeRecordService->handleClock($userID, 'Europe/London');
+        try {
+            $this->timeRecordService->handleClock($userID, 'Europe/London');
+        } catch (ShortSessionDurationException $e) {
+            $this->addError("clock", "The session duration is too short. It has been deleted");
+        }
 
         // Refresh the next time record type
         $this->nextTimeRecordType = $this->timeRecordService->getNextTimeRecordType($userID);

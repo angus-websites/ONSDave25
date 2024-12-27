@@ -490,5 +490,36 @@ class TimeRecordServiceTest extends TestCase
         $this->assertEquals(28800, $minutesWorked);
     }
 
+    public function testGetSecondsWorkedTodayOngoingSession()
+    {
+
+        // Mock carbon now to 15:00
+        Carbon::setTestNow(Carbon::parse('2024-01-01 15:00:00'));
+
+        $today = Carbon::parse('2024-01-01');
+
+        // Create a new instance of TimeRecordService
+        $timeRecordService = new TimeRecordService($this->timeRecordRepository);
+
+        // Mock the getTimeRecordsForDay method to return an array of TimeRecord objects
+        $this->timeRecordRepository->method('getSessionsForDay')->willReturn(
+            new SessionCollection(
+                [
+                    new Session($today->copy()->setTime(9, 0, 0), $today->copy()->setTime(10, 0, 0)),
+                    new Session($today->copy()->setTime(13, 0, 0), null),
+                ]
+            )
+        );
+
+        // Call the getSecondsWorkedToday method
+        $minutesWorked = $timeRecordService->getSecondsWorkedToday($this->user->id);
+
+        // Expected is 9-10 and then 13-15
+        $expectedSeconds = 10800;
+
+        // Assert the total seconds worked today
+        $this->assertEquals($expectedSeconds, $minutesWorked);
+    }
+
 
 }

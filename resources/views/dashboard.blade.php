@@ -8,11 +8,9 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="text-center">
-                <h1
-                    class="text-4xl font-bold tracking-tight text-base-content sm:text-4xl"
-                >
-                    Good morning User
-                </h1>
+                <x-greeting>
+                    {{ Auth::user()->name }}
+                </x-greeting>
                 <p class="mb-6 mt-2 text-lg leading-8 text-base-content/70">
                     Today you have worked...
                 </p>
