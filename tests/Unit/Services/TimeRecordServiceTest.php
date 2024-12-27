@@ -349,6 +349,62 @@ class TimeRecordServiceTest extends TestCase
         $timeRecordService->handleClock($this->user->id, 'Europe/Paris', $end);
     }
 
+    /**
+     * Test we can start and end a session, then start
+     * a new session quickly after
+     */
+    public function testHandleClockQuickSessions()
+    {
+        // Mock the start and end times
+        $start = Carbon::parse('2024-01-01 09:00:00', 'Europe/London');
+        $end = Carbon::parse('2024-01-01 17:00:00', 'Europe/London');
+        // Start again 5 seconds after the first session ended
+        $start2 = Carbon::parse('2024-01-01 17:00:05', 'Europe/London');
+
+        // Define the expected calls to the mock repository
+        // The first call should be to createTimeRecord to clock in
+        // The second call should be to createTimeRecord to clock out
+        // The third call should be to createTimeRecord to clock in again
+        $matcher = $this->exactly(3);
+        $this->timeRecordRepository->expects($matcher)
+            ->method('createTimeRecord')
+            ->willReturnCallback(function ($data) use ($start, $end, $start2, $matcher) {
+
+                // Match parameters based on the invocation count
+                match ($matcher->numberOfInvocations()) {
+                    1 => $this->assertTimeRecord($data, $this->user->id, $start, TimeRecordType::CLOCK_IN),
+                    2 => $this->assertTimeRecord($data, $this->user->id, $end, TimeRecordType::CLOCK_OUT),
+                    3 => $this->assertTimeRecord($data, $this->user->id, $start2, TimeRecordType::CLOCK_IN),
+                };
+            });
+
+        // Mock the calls to getLastRecordForUser
+        $this->timeRecordRepository->expects($this->exactly(3))
+            ->method('getLastRecordForUser')
+            ->willReturnOnConsecutiveCalls(
+                null,
+                TimeRecord::make([
+                    'recorded_at' => $start,
+                    'type' => TimeRecordType::CLOCK_IN,
+                ]),
+                TimeRecord::make([
+                    'recorded_at' => $end,
+                    'type' => TimeRecordType::CLOCK_OUT,
+                ])
+            );
+
+        // Create a new instance of TimeRecordService
+        $timeRecordService = new TimeRecordService($this->timeRecordRepository);
+
+        // Call the handleClock method to clock in
+        $timeRecordService->handleClock($this->user->id, 'Europe/London', $start);
+
+        $timeRecordService->handleClock($this->user->id, 'Europe/London', $end);
+
+        $timeRecordService->handleClock($this->user->id, 'Europe/London', $start2);
+        
+    }
+
     public function testGetNextTimeRecordType()
     {
         // Create a new instance of TimeRecordService
