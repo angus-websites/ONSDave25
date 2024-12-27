@@ -69,7 +69,7 @@ class TimeRecordRepositoryTest extends TestCase
         $this->assertCount(3, $records);
     }
 
-    public function testGetTimeRecordsForDaySingle()
+    public function testGetSessionsForDaySingle()
     {
         $user = User::factory()->create();
 
@@ -90,16 +90,15 @@ class TimeRecordRepositoryTest extends TestCase
         ]);
 
 
-        $records = $this->timeRecordRepository->getTimeRecordsForDay($user->id, $today);
+        $records = $this->timeRecordRepository->getSessionsForDay($user->id, $today);
         $this->assertCount(1, $records);
 
-        // Assert the structure of the returned collection
-        $this->assertArrayHasKey('clock_in', $records[0]);
-        $this->assertArrayHasKey('clock_out', $records[0]);
+        // Assert this contains a single session that has a length of 8 hours
+        $this->assertEquals(28800, $records->first()->getDurationInSeconds());
 
     }
 
-    public function testGetTimeRecordsForDaySingleNoClockOut()
+    public function testGetSessionsForDaySingleNoClockOut()
     {
         $user = User::factory()->create();
 
@@ -113,11 +112,11 @@ class TimeRecordRepositoryTest extends TestCase
             'type' => TimeRecordType::CLOCK_IN,
         ]);
 
-        $records = $this->timeRecordRepository->getTimeRecordsForDay($user->id, $today);
+        $records = $this->timeRecordRepository->getSessionsForDay($user->id, $today);
         $this->assertCount(1, $records);
 
-        // Assert the structure of the returned collection
-        $this->assertArrayHasKey('clock_in', $records[0]);
+        // Assert this contains a single session that is ongoing
+        $this->assertTrue($records->first()->isOngoing());
 
     }
 }

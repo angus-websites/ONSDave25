@@ -2,7 +2,7 @@
 
 namespace App\Contracts;
 
-use App\Collections\TimeRecordCollection;
+use App\Collections\SessionCollection;
 use App\Models\TimeRecord;
 use Carbon\Carbon;
 
@@ -21,5 +21,5 @@ interface TimeRecordRepositoryInterface
 
     public function getAllRecordsForUser(int $userId): iterable;
 
-    public function getTimeRecordsForDay(int $userId, Carbon $day): TimeRecordCollection;
+    public function getSessionsForDay(int $userId, Carbon $day): SessionCollection;
 }

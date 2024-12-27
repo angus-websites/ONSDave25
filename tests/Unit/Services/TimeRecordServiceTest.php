@@ -369,5 +369,25 @@ class TimeRecordServiceTest extends TestCase
 
     }
 
+    public function testGetMinutesWorkedToday()
+    {
+
+        $today = Carbon::parse('2024-01-01');
+
+        // Create a new instance of TimeRecordService
+        $timeRecordService = new TimeRecordService($this->timeRecordRepository);
+
+        // Mock the getTimeRecordsForDay method to return an array of TimeRecord objects
+        $this->timeRecordRepository->method('getTimeRecordsForDay')->willReturn(
+            // TODO
+        );
+
+        // Call the getMinutesWorkedToday method
+        $minutesWorked = $timeRecordService->getMinutesWorkedToday($this->user->id);
+
+        // Assert the minutes worked is 480 (8 hours)
+        $this->assertEquals(480, $minutesWorked);
+    }
+
 
 }

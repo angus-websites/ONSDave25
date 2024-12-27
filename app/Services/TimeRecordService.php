@@ -24,6 +24,12 @@ class TimeRecordService
         $this->timeRecordRepository = $timeRecordRepository;
     }
 
+    public function getMinutesWorkedToday(int $userId): int
+    {
+        $sessionsToday = null;
+
+    }
+
     /**
      * Get the next time record type for the given
      * i.e if they have just clocked in, the next type will be clock out
