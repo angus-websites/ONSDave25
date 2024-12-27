@@ -25,6 +25,22 @@ class TimeRecordService
     }
 
     /**
+     * Get the next time record type for the given
+     * i.e if they have just clocked in, the next type will be clock out
+     */
+    public function getNextTimeRecordType(int $userId): TimeRecordType
+    {
+        $lastTimeRecord = $this->timeRecordRepository->getLastRecordForUser($userId);
+
+        if (!$lastTimeRecord || in_array($lastTimeRecord->type, [TimeRecordType::CLOCK_OUT, TimeRecordType::AUTO_CLOCK_OUT])) {
+            return TimeRecordType::CLOCK_IN;
+        }
+
+        return TimeRecordType::CLOCK_OUT;
+    }
+
+
+    /**
      * Handle the clock in/out operation for the given user,
      * the userProvidedTime is optional and can be used to override the current time
      *

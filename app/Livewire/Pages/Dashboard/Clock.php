@@ -2,50 +2,38 @@
 
 namespace App\Livewire\Pages\Dashboard;
 
+use App\Enums\TimeRecordType;
+use App\Services\TimeRecordService;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Clock extends Component
 {
-    public int $currentHour;
-    public int $currentMinute;
+    public TimeRecordType $nextTimeRecordType;
 
-    public bool $useCurrentTime;
+    protected TimeRecordService $timeRecordService;
 
-    public function mount()
+    public function __construct()
     {
-        $currentHour = date('H');
-        $currentMinute = date('i');
-
-        $this->currentHour = (int) $currentHour;
-        $this->currentMinute = (int) $currentMinute;
-        $this->useCurrentTime = true;
+        $this->timeRecordService = app(TimeRecordService::class);
     }
 
-     public function updatedSpecifiedTime($value)
-     {
-         if (!$this->validateTime($value)) {
-             $this->addError('specifiedTime', 'Invalid time format. Use HH:MM.');
-         }
-     }
+    public function mount(): void
+    {
+        $this->nextTimeRecordType = $this->timeRecordService->getNextTimeRecordType(Auth::id());
+    }
 
-     public function toggleTimeInput()
-     {
-         $this->useCurrentTime = !$this->useCurrentTime;
+    /**
+     * Clock in the user
+     */
+    public function clock(): void
+    {
+        $userID = Auth::id();
+        $this->timeRecordService->handleClock($userID, 'Europe/London');
 
-         if ($this->useCurrentTime) {
-             $this->specifiedTime = $this->currentTime;
-         }
-     }
-
-     public function resetTime()
-     {
-         $this->specifiedTime = $this->currentTime;
-     }
-
-     private function validateTime($time)
-     {
-         return preg_match('/^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$/', $time);
-     }
+        // Refresh the next time record type
+        $this->nextTimeRecordType = $this->timeRecordService->getNextTimeRecordType($userID);
+    }
 
     public function render()
     {
