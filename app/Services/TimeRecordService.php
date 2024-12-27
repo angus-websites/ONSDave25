@@ -72,7 +72,7 @@ class TimeRecordService
         }
 
         // If the session duration is too short, remove the last time record and return
-        if ($lastTimeRecord && $this->isSessionDurationTooShort($lastTimeRecord->recorded_at, $userProvidedTime)) {
+        if ($lastTimeRecord && $lastTimeRecord->type === TimeRecordType::CLOCK_IN  && $this->isSessionDurationTooShort($lastTimeRecord->recorded_at, $userProvidedTime)) {
             $this->timeRecordRepository->removeLastRecordForUser($userId);
             throw new ShortSessionDurationException;
         }

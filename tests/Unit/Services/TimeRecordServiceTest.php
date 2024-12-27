@@ -402,7 +402,7 @@ class TimeRecordServiceTest extends TestCase
         $timeRecordService->handleClock($this->user->id, 'Europe/London', $end);
 
         $timeRecordService->handleClock($this->user->id, 'Europe/London', $start2);
-        
+
     }
 
     public function testGetNextTimeRecordType()
