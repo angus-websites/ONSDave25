@@ -33,6 +33,16 @@ class Clock extends Component
 
         // Refresh the next time record type
         $this->nextTimeRecordType = $this->timeRecordService->getNextTimeRecordType($userID);
+
+        // If the next time record type is clock OUT, emit the "clockedOut" event
+        if ($this->nextTimeRecordType === TimeRecordType::CLOCK_OUT) {
+            $this->dispatch('clockedIn');
+        }else{
+            // If the next time record type is clock IN, emit the "clockedIn" event
+            $this->dispatch('clockedOut');
+        }
+
+        $this->dispatch('timeWorkedUpdated');
     }
 
     public function render()

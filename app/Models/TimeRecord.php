@@ -10,7 +10,7 @@ class TimeRecord extends Model
 {
     use HasFactory;
 
-    public static int $minimumSessionSeconds = 30;
+    public static int $minimumSessionSeconds = 10;
 
     protected $fillable = [
         'user_id', 'recorded_at', 'type', 'notes',

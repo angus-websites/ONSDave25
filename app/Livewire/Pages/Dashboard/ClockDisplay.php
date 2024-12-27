@@ -4,11 +4,12 @@ namespace App\Livewire\Pages\Dashboard;
 
 use App\Services\TimeRecordService;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ClockDisplay extends Component
 {
-    public $timeWorked = "00:01:00";
+    public string $timeWorked = "00:00:00";
     protected TimeRecordService $timeRecordService;
 
     public function __construct()
@@ -16,10 +17,18 @@ class ClockDisplay extends Component
         $this->timeRecordService = app(TimeRecordService::class);
     }
 
-    public function mount()
+    #[On('timeWorkedUpdated')]
+    public function updateTimeWorked(): void
     {
         $userID = Auth::id();
-        $timeWorked = $this->timeRecordService->getTimeWorkedToday($userID);
+        // This method will be called when the event is emitted
+        $secondsWorked = $this->timeRecordService->getSecondsWorkedToday($userID);
+        $this->timeWorked = gmdate("H:i:s", $secondsWorked);
+    }
+
+    public function mount()
+    {
+        $this->updateTimeWorked();
     }
 
     public function render()

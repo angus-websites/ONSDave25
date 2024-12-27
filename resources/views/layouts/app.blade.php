@@ -25,4 +25,5 @@
 
         </div>
     </body>
+    @stack('scripts')
 </x-master-layout>
