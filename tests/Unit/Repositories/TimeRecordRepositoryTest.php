@@ -7,6 +7,7 @@ use App\Enums\TimeRecordType;
 use App\Models\TimeRecord;
 use App\Models\User;
 use App\Repositories\TimeRecordRepository;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -66,5 +67,57 @@ class TimeRecordRepositoryTest extends TestCase
         $records = $this->timeRecordRepository->getAllRecordsForUser($user->id);
 
         $this->assertCount(3, $records);
+    }
+
+    public function testGetTimeRecordsForDaySingle()
+    {
+        $user = User::factory()->create();
+
+        // Set fake day as january 1st, 2021
+        $today = Carbon::create(2021, 1, 1);
+
+        // Create a clock in at 9am and clock out at 5pm
+        TimeRecord::factory()->create([
+            'user_id' => $user->id,
+            'recorded_at' => $today->setHour(9),
+            'type' => TimeRecordType::CLOCK_IN,
+        ]);
+
+        TimeRecord::factory()->create([
+            'user_id' => $user->id,
+            'recorded_at' => $today->setHour(17),
+            'type' => TimeRecordType::CLOCK_OUT,
+        ]);
+
+
+        $records = $this->timeRecordRepository->getTimeRecordsForDay($user->id, $today);
+        $this->assertCount(1, $records);
+
+        // Assert the structure of the returned collection
+        $this->assertArrayHasKey('clock_in', $records[0]);
+        $this->assertArrayHasKey('clock_out', $records[0]);
+
+    }
+
+    public function testGetTimeRecordsForDaySingleNoClockOut()
+    {
+        $user = User::factory()->create();
+
+        // Set fake day as january 1st, 2021
+        $today = Carbon::create(2021, 1, 1);
+
+        // Create a clock in at 9am and clock out at 5pm
+        TimeRecord::factory()->create([
+            'user_id' => $user->id,
+            'recorded_at' => $today->setHour(9),
+            'type' => TimeRecordType::CLOCK_IN,
+        ]);
+
+        $records = $this->timeRecordRepository->getTimeRecordsForDay($user->id, $today);
+        $this->assertCount(1, $records);
+
+        // Assert the structure of the returned collection
+        $this->assertArrayHasKey('clock_in', $records[0]);
+
     }
 }

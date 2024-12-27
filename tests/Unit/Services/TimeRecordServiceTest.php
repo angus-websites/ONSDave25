@@ -43,6 +43,14 @@ class TimeRecordServiceTest extends TestCase
         Carbon::setTestNow();
     }
 
+    private function assertTimeRecord(array $data, int $userId, Carbon $expectedTime, TimeRecordType $expectedType): void
+    {
+        $this->assertEquals($userId, $data['user_id']);
+        $this->assertInstanceOf(Carbon::class, $data['recorded_at']);
+        $this->assertTrue($data['recorded_at']->eq($expectedTime));
+        $this->assertEquals($expectedType, $data['type']);
+    }
+
     /**
      * Test a new user clocking in for the first time in the UK without providing a time
      *
@@ -132,18 +140,10 @@ class TimeRecordServiceTest extends TestCase
         $timeRecordService->handleClock($this->user->id, 'Europe/London', $customTime);
     }
 
-    private function assertTimeRecord(array $data, int $userId, Carbon $expectedTime, TimeRecordType $expectedType): void
-    {
-        $this->assertEquals($userId, $data['user_id']);
-        $this->assertInstanceOf(Carbon::class, $data['recorded_at']);
-        $this->assertTrue($data['recorded_at']->eq($expectedTime));
-        $this->assertEquals($expectedType, $data['type']);
-    }
-
     /**
      * Test a new user clocking in, then clocking out in the UK without providing a time
      *
-     * @throws Exception|Exception|\PHPUnit\Framework\MockObject\Exception
+     * @throws Exception
      */
     public function testHandleClockUkNewUserTwiceNow()
     {
@@ -346,4 +346,6 @@ class TimeRecordServiceTest extends TestCase
         // Call the handleClock method to clock out
         $timeRecordService->handleClock($this->user->id, 'Europe/Paris', $end);
     }
+
+
 }
