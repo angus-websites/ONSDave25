@@ -28,7 +28,7 @@
             <div
                    class="card"
                >
-                <div class="card-body flex flex-col items-center justify-center">
+                <div class="relative card-body flex flex-col items-center justify-center">
                     <div class="flex items-center space-x-6">
                         <!-- Hour Selector -->
                         <div class="flex flex-col items-center gap-y-2" data-input-number>
@@ -67,12 +67,24 @@
                         </div>
 
                     </div>
-                    <button class="btn btn-square btn-primary btn-soft absolute right-4 top-1/2 -translate-y-1/2" aria-label="Icon Button">
+                    <button
+                        class="btn btn-square btn-primary btn-soft absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center"
+                        aria-label="Icon Button"
+                    >
                         <span class="icon-[tabler--refresh]"></span>
                     </button>
                 </div>
 
+                <div class="card-footer">
+                </div>
+
                </div>
+
+            <!-- Button -->
+            <div class="my-10 text-center">
+                <button class="btn btn-primary btn-lg btn-success">Clock in</button>
+
+            </div>
         </div>
     </div>
 </x-app-layout>
