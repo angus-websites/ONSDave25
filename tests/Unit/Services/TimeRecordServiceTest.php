@@ -2,10 +2,12 @@
 
 namespace Tests\Unit\Services;
 
+use App\Collections\SessionCollection;
 use App\Contracts\TimeRecordRepositoryInterface;
 use App\Enums\TimeRecordType;
 use App\Exceptions\InvalidTimeProvidedException;
 use App\Exceptions\ShortSessionDurationException;
+use App\Models\Session;
 use App\Models\TimeRecord;
 use App\Models\User;
 use App\Services\TimeRecordService;
@@ -369,7 +371,7 @@ class TimeRecordServiceTest extends TestCase
 
     }
 
-    public function testGetMinutesWorkedToday()
+    public function testGetSecondsWorkedToday()
     {
 
         $today = Carbon::parse('2024-01-01');
@@ -378,15 +380,58 @@ class TimeRecordServiceTest extends TestCase
         $timeRecordService = new TimeRecordService($this->timeRecordRepository);
 
         // Mock the getTimeRecordsForDay method to return an array of TimeRecord objects
-        $this->timeRecordRepository->method('getTimeRecordsForDay')->willReturn(
-            // TODO
+        $this->timeRecordRepository->method('getSessionsForDay')->willReturn(
+            new SessionCollection(
+                [
+                    new Session($today->copy()->setTime(9, 0, 0), $today->copy()->setTime(17, 0, 0)),
+                ]
+            )
         );
 
-        // Call the getMinutesWorkedToday method
-        $minutesWorked = $timeRecordService->getMinutesWorkedToday($this->user->id);
+        // Call the getSecondsWorkedToday method
+        $minutesWorked = $timeRecordService->getSecondsWorkedToday($this->user->id);
 
-        // Assert the minutes worked is 480 (8 hours)
-        $this->assertEquals(480, $minutesWorked);
+        // Assert the total seconds worked today is 28800
+        $this->assertEquals(28800, $minutesWorked);
+    }
+
+    public function testGetSecondsWorkedTodayNoSessions()
+    {
+        // Create a new instance of TimeRecordService
+        $timeRecordService = new TimeRecordService($this->timeRecordRepository);
+
+        // Mock the getTimeRecordsForDay method to return an empty array
+        $this->timeRecordRepository->method('getSessionsForDay')->willReturn(new SessionCollection());
+
+        // Call the getSecondsWorkedToday method
+        $minutesWorked = $timeRecordService->getSecondsWorkedToday($this->user->id);
+
+        // Assert the total seconds worked today is 0
+        $this->assertEquals(0, $minutesWorked);
+    }
+
+    public function testGetSecondsWorkedTodayMultipleSessions()
+    {
+        $today = Carbon::parse('2024-01-01');
+
+        // Create a new instance of TimeRecordService
+        $timeRecordService = new TimeRecordService($this->timeRecordRepository);
+
+        // Mock the getTimeRecordsForDay method to return an array of TimeRecord objects
+        $this->timeRecordRepository->method('getSessionsForDay')->willReturn(
+            new SessionCollection(
+                [
+                    new Session($today->copy()->setTime(9, 0, 0), $today->copy()->setTime(12, 0, 0)),
+                    new Session($today->copy()->setTime(12, 0, 0), $today->copy()->setTime(17, 0, 0)),
+                ]
+            )
+        );
+
+        // Call the getSecondsWorkedToday method
+        $minutesWorked = $timeRecordService->getSecondsWorkedToday($this->user->id);
+
+        // Assert the total seconds worked today is 28800
+        $this->assertEquals(28800, $minutesWorked);
     }
 
 

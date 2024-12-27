@@ -24,9 +24,15 @@ class TimeRecordService
         $this->timeRecordRepository = $timeRecordRepository;
     }
 
-    public function getMinutesWorkedToday(int $userId): int
+    /**
+     * Get the number of seconds worked today by the given user.
+     */
+    public function getSecondsWorkedToday(int $userId): int
     {
-        $sessionsToday = null;
+        $sessionsToday = $this->timeRecordRepository->getSessionsForDay($userId, Carbon::now());
+
+        // Calculate the total minutes worked today
+        return $sessionsToday->getTotalDurationInSeconds();
 
     }
 
