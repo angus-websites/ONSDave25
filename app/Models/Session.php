@@ -26,14 +26,10 @@ class Session
      */
     public function getDurationInSeconds(): int
     {
+        if ($this->isOnGoing()) {
+            return $this->clockIn->diffInSeconds(Carbon::now());
+        }
         return $this->clockIn->diffInSeconds($this->clockOut);
     }
 
-    /**
-     * Get the duration of the session as a formatted string (H:i:s).
-     */
-    public function getDurationFormatted(): string
-    {
-        return gmdate('H:i:s', $this->getDurationInSeconds());
-    }
 }
